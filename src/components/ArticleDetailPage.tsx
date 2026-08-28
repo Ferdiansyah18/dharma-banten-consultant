@@ -241,7 +241,12 @@ export function ArticleDetailPage({
       {/* Footer */}
       <footer className="landing-footer">
         <div className="layout-wide footer-grid">
-          <Brand dark onClick={onBack} />
+          <div className="footer-brand-col">
+            <Brand dark onClick={onBack} />
+            <p className="footer-tagline">
+              Konsultan Hukum, HR &amp; Talenta Terpadu di Banten &amp; Jabodetabek.
+            </p>
+          </div>
           <div>
             <p className="footer-label">Kantor</p>
             <address>
@@ -249,6 +254,25 @@ export function ArticleDetailPage({
               <br />
               Banten, Indonesia
             </address>
+          </div>
+          <div>
+            <p className="footer-label">WhatsApp</p>
+            <a
+              href="https://wa.me/6281916243614"
+              target="_blank"
+              rel="noreferrer"
+              title="Hubungi I Wayan Sugiarta via WhatsApp"
+            >
+              <WhatsAppIcon size={14} /> 0819 1624 3614 (I Wayan Sugiarta) <Arrow />
+            </a>
+            <a
+              href="https://wa.me/6285162750218"
+              target="_blank"
+              rel="noreferrer"
+              title="Hubungi Ferdiansyah via WhatsApp"
+            >
+              <WhatsAppIcon size={14} /> 0851 6275 0218 (Ferdiansyah) <Arrow />
+            </a>
           </div>
           <div>
             <p className="footer-label">Mulai Konsultasi</p>
@@ -261,7 +285,7 @@ export function ArticleDetailPage({
           </div>
         </div>
         <div className="layout-wide footer-base">
-          <span>2026 Dharma Banten Konsultan</span>
+          <span>© 2026 Dharma Banten Konsultan</span>
           <span>HR / Legal / Talenta</span>
         </div>
       </footer>

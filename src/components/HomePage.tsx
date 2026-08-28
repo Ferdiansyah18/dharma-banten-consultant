@@ -4,7 +4,7 @@ import { heroImages, pillars } from '../data/content';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import { Article, Service } from '../types';
 import { ArticlesSection } from './ArticlesSection';
-import { Arrow, EmailIcon, InstagramIcon, LinkedinIcon, ThreadsIcon } from './icons/Icons';
+import { Arrow, EmailIcon, InstagramIcon, LinkedinIcon, ThreadsIcon, WhatsAppIcon } from './icons/Icons';
 import { Brand } from './ui/Brand';
 import { Reveal } from './ui/Reveal';
 
@@ -74,7 +74,7 @@ export function HomePage({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
     >
-      <header className={`landing-header ${scrolled ? 'is-scrolled' : ''}`}>
+      <header className={`landing-header ${scrolled ? 'is-scrolled' : ''} ${menuOpen ? 'is-menu-open' : ''}`}>
         <Brand onClick={() => goTo('top')} />
         <nav className={`landing-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Navigasi Utama">
           <button
@@ -107,20 +107,28 @@ export function HomePage({
           >
             Kontak
           </button>
-          <button className="header-cta" onClick={() => onBook()}>
+          <button className="header-cta" onClick={() => { setMenuOpen(false); onBook(); }}>
             Jadwal &amp; Biaya <Arrow />
           </button>
         </nav>
         <button
-          className="mobile-menu"
+          className={`mobile-menu ${menuOpen ? 'is-active' : ''}`}
           onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Buka menu navigasi"
+          aria-label={menuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
           aria-expanded={menuOpen}
         >
           <span />
           <span />
         </button>
       </header>
+
+      {menuOpen && (
+        <div
+          className="mobile-nav-backdrop"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Floating Side Vertical Pagination Stepper */}
       <aside className="floating-side-nav" aria-label="Navigasi Layar">
@@ -414,6 +422,25 @@ export function HomePage({
                   <br />
                   Banten, Indonesia
                 </address>
+              </div>
+              <div className="footer-info-col">
+                <p className="footer-label">WhatsApp</p>
+                <a
+                  href="https://wa.me/6281916243614"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Hubungi I Wayan Sugiarta via WhatsApp"
+                >
+                  <WhatsAppIcon size={14} /> 0819 1624 3614 (I Wayan Sugiarta) <Arrow />
+                </a>
+                <a
+                  href="https://wa.me/6285162750218"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Hubungi Ferdiansyah via WhatsApp"
+                >
+                  <WhatsAppIcon size={14} /> 0851 6275 0218 (Ferdiansyah) <Arrow />
+                </a>
               </div>
               <div className="footer-info-col">
                 <p className="footer-label">Mulai Konsultasi</p>
