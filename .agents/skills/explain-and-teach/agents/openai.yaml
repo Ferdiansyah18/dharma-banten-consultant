@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Explain & Teach'
+  short_description: 'Provide adaptive, systemic explanations of technical trade-offs'
+policy:
+  allow_implicit_invocation: true

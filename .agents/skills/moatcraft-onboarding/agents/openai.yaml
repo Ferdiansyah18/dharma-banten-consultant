@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Moatcraft Onboarding'
+  short_description: 'Agent guide for transparently walking new users through the Moatcraft workflow.'
+policy:
+  allow_implicit_invocation: false

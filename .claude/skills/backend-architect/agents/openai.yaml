@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Backend Architect'
+  short_description: 'Establish system boundaries, data models, and backend moats'
+policy:
+  allow_implicit_invocation: true

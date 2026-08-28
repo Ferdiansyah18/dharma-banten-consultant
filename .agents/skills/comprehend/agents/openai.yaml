@@ -1,0 +1,5 @@
+interface:
+  display_name: "Comprehend"
+  short_description: "User-invoked command (/comprehend) for code walkthroughs & comprehension journals"
+policy:
+  allow_implicit_invocation: false

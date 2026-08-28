@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Code Review'
+  short_description: 'Perform two-axis parallel review for standards and spec'
+policy:
+  allow_implicit_invocation: false

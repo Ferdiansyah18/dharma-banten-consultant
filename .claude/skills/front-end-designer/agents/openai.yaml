@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Front-End Designer'
+  short_description: 'Apply opinionated UI design rules and design moats'
+policy:
+  allow_implicit_invocation: true

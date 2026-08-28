@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "skills": {
+    "agentic-dev-loop": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/agentic-dev-loop/SKILL.md",
+      "computedHash": "89fcbd0bdebe371fd38c4c08815787a29197fbdae720e763c33ed8598c025b2e"
+    },
+    "alignment-audit": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/alignment-audit/SKILL.md",
+      "computedHash": "364ed76b3f6732a79bc9b6a893c6ffcdc905789169604928b696739de5bf6e6d"
+    },
+    "backend-architect": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/backend-architect/SKILL.md",
+      "computedHash": "1e2fb81f452e0bb4969baba344a9504219c5ec73396b77aea7bcd90071173d49"
+    },
+    "brand-product-alignment": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/brand-product-alignment/SKILL.md",
+      "computedHash": "92a5d95e5743b58da95d5e7f78f92f41dd9f34ce41c99aa290018dde649cf2d3"
+    },
+    "code-review": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/code-review/SKILL.md",
+      "computedHash": "d378bb7cfcbca4a4228b456adf7fca489f8a3553cff4a85641a45e04539a6dc6"
+    },
+    "comprehend": {
+      "source": "dimsedra/eds-skill",
+      "sourceType": "github",
+      "skillPath": "comprehend/SKILL.md",
+      "computedHash": "5b2bca514abc4bfe43beaccbd0bd6289bf2d53acdc6c111a7b7c7b6a41c00a0c"
+    },
+    "explain-and-teach": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/explain-and-teach/SKILL.md",
+      "computedHash": "9da948fcfa6061bcdd775c77d72c41915d9f712cfe6ff4a1c6caf3d12ade14ff"
+    },
+    "front-end-designer": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/front-end-designer/SKILL.md",
+      "computedHash": "c52daa51678d0940ed1612c41477e039d5cf80c8c9b7c667185d4df8dcde06c0"
+    },
+    "html-presentation": {
+      "source": "dimsedra/eds-skill",
+      "sourceType": "github",
+      "skillPath": "html-presentation/SKILL.md",
+      "computedHash": "0323d345aaf15cc38b7ee2b302dc2adef61483de8686b2fd36fd0dbc94988166"
+    },
+    "implementation-tdd": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/implementation-tdd/SKILL.md",
+      "computedHash": "f4dfe7112cd2cda187e646647c131a1e63feda151a5540d7c77d61efbbc3e53f"
+    },
+    "moatcraft-onboarding": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/moatcraft-onboarding/SKILL.md",
+      "computedHash": "c3102078af2687741c76818f18fac05ffda7008566006c571ff661c302a775ac"
+    },
+    "progress-mapper": {
+      "source": "dimsedra/moatcraft-skills",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/progress-mapper/SKILL.md",
+      "computedHash": "ce7d07765753cc55bc00680765e1683e195043e5670240d04f62fea6da77f047"
+    },
+    "write-skills": {
+      "source": "dimsedra/eds-skill",
+      "sourceType": "github",
+      "skillPath": "write-skills/SKILL.md",
+      "computedHash": "bddd6de770ce17db6b412c620485e5d2bd0b505e84f3ecb1c334de11a3b6af4a"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Progress Mapper'
+  short_description: 'Generate and maintain high-level progress maps and task breakdowns'
+policy:
+  allow_implicit_invocation: false

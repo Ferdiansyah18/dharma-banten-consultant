@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Agentic Development Loop'
+  short_description: 'Orchestrate the continuous agentic development loop'
+policy:
+  allow_implicit_invocation: false

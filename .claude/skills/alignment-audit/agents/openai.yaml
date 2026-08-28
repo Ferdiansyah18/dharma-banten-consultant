@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Alignment Audit'
+  short_description: 'Audit code diff against approved plans and PRDs'
+policy:
+  allow_implicit_invocation: false

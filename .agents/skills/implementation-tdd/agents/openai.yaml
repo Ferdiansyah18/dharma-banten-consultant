@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Implementation TDD'
+  short_description: 'Execute artifact-driven Red-Green TDD implementation'
+policy:
+  allow_implicit_invocation: false

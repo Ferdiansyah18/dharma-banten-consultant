@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Brand & Product Alignment'
+  short_description: 'Conduct fluid brand and product identity discovery'
+policy:
+  allow_implicit_invocation: true
