@@ -181,33 +181,21 @@ textarea:focus-visible {
   color: inherit;
   cursor: pointer;
   display: none;
-  flex-direction: column;
-  height: 2.2rem;
+  height: 2.4rem;
   justify-content: center;
-  padding: 0.4rem;
+  padding: 0;
   position: relative;
   width: 2.4rem;
   z-index: 35;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.mobile-menu span {
-  background: currentColor;
+.mobile-menu:hover {
+  opacity: 0.85;
+}
+.mobile-menu svg {
   display: block;
-  height: 1.5px;
-  margin: 0.22rem 0;
-  transform-origin: center;
-  transition:
-    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.2s ease,
-    opacity 0.2s ease;
-  width: 100%;
-}
-.mobile-menu.is-active span:first-child,
-.landing-header.is-menu-open .mobile-menu span:first-child {
-  transform: translateY(3.5px) rotate(45deg);
-}
-.mobile-menu.is-active span:last-child,
-.landing-header.is-menu-open .mobile-menu span:last-child {
-  transform: translateY(-3.5px) rotate(-45deg);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
 .landing-hero {

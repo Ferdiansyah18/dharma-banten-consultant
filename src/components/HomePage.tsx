@@ -4,7 +4,16 @@ import { heroImages, pillars } from '../data/content';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import { Article, Service } from '../types';
 import { ArticlesSection } from './ArticlesSection';
-import { Arrow, EmailIcon, InstagramIcon, LinkedinIcon, ThreadsIcon, WhatsAppIcon } from './icons/Icons';
+import {
+  Arrow,
+  CloseIcon,
+  EmailIcon,
+  InstagramIcon,
+  LinkedinIcon,
+  MenuIcon,
+  ThreadsIcon,
+  WhatsAppIcon,
+} from './icons/Icons';
 import { Brand } from './ui/Brand';
 import { Reveal } from './ui/Reveal';
 
@@ -117,8 +126,7 @@ export function HomePage({
           aria-label={menuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
           aria-expanded={menuOpen}
         >
-          <span />
-          <span />
+          {menuOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
         </button>
       </header>
 

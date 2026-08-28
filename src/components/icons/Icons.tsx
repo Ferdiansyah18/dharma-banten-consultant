@@ -6,6 +6,8 @@ import {
   LuClock,
   LuCheck,
   LuShare2,
+  LuMenu,
+  LuX,
 } from 'react-icons/lu';
 import {
   FaLinkedinIn,
@@ -56,4 +58,12 @@ export function ClockIcon({ className = '', size = 16 }: { className?: string; s
 
 export function CheckIcon({ className = '', size = 16 }: { className?: string; size?: number }) {
   return <LuCheck className={className} size={size} aria-hidden="true" />;
+}
+
+export function MenuIcon({ className = '', size = 24 }: { className?: string; size?: number }) {
+  return <LuMenu className={className} size={size} aria-hidden="true" />;
+}
+
+export function CloseIcon({ className = '', size = 24 }: { className?: string; size?: number }) {
+  return <LuX className={className} size={size} aria-hidden="true" />;
 }
