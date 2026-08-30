@@ -68,6 +68,18 @@ textarea:focus-visible {
   padding: 0;
   text-align: left;
 }
+.brand-logo-img {
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  height: 2.25rem;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+  width: 2.25rem;
+}
+.brand:hover .brand-logo-img {
+  transform: scale(1.06);
+}
 .brand-monogram {
   align-items: center;
   border: 1px solid currentColor;
