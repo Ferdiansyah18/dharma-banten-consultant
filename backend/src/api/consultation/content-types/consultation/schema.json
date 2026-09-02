@@ -1,0 +1,56 @@
+{
+  "kind": "collectionType",
+  "collectionName": "consultations",
+  "info": {
+    "singularName": "consultation",
+    "pluralName": "consultations",
+    "displayName": "Jadwal Konsultasi",
+    "description": "Data pemesanan konsultasi dari website Dharma Banten"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "company": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "service": {
+      "type": "string"
+    },
+    "packageName": {
+      "type": "string"
+    },
+    "packagePrice": {
+      "type": "string"
+    },
+    "bookingDate": {
+      "type": "string"
+    },
+    "bookingTime": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["Baru", "Dikonfirmasi", "Selesai", "Dibatalkan"],
+      "default": "Baru"
+    }
+  }
+}

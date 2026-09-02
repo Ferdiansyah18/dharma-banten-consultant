@@ -1,6 +1,29 @@
+# Root
 node_modules
 dist
 dist-ssr
 *.local
 .env
+.DS_Store
 .journal/
+.vite/
+
+# Frontend
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+frontend/.env
+
+# Backend (Strapi)
+backend/node_modules
+backend/dist
+backend/.tmp
+backend/.strapi
+backend/.cache
+backend/build
+backend/.env
+backend/*.db
+
+# Legacy folder
+my-strapi-cms
