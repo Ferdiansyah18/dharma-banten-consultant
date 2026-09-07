@@ -39,6 +39,27 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
       },
     },
   },
+  email: {
+    config: {
+      provider: 'nodemailer',
+      providerOptions: {
+        host: env('SMTP_HOST', 'mail.dharmabantenconsultant.com'),
+        port: env.int('SMTP_PORT', 465),
+        secure: env.bool('SMTP_SECURE', true),
+        auth: {
+          user: env('SMTP_USERNAME', 'info@dharmabantenconsultant.com'),
+          pass: env('SMTP_PASSWORD', ''),
+        },
+        tls: {
+          rejectUnauthorized: env.bool('SMTP_TLS_REJECT_UNAUTHORIZED', false),
+        },
+      },
+      settings: {
+        defaultFrom: env('NOTIFICATION_SENDER_EMAIL', 'info@dharmabantenconsultant.com'),
+        defaultReplyTo: env('NOTIFICATION_REPLY_TO_EMAIL', 'info@dharmabantenconsultant.com'),
+      },
+    },
+  },
 });
 
 export default config;
