@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Setup Node.js 20
         uses: actions/setup-node@v4
@@ -39,14 +39,19 @@ jobs:
           local-dir: ./frontend/dist/
           server-dir: ./public_html/
 
-      # 3. Kompilasi Backend (TypeScript Strapi)
+      # 3. Kompilasi Backend (TypeScript Strapi) & Siapkan Restart Trigger
       - name: Install & Build Backend
         run: |
           cd backend
           npm ci
           npm run build
+          mkdir -p tmp
+          touch tmp/restart.txt
+          echo "!dist/" > .git-ftp-include
+          echo "!dist/**" >> .git-ftp-include
+          echo "!tmp/restart.txt" >> .git-ftp-include
 
-      # 4. Deploy Backend
+      # 4. Deploy Backend & Trigger Passenger Restart
       - name: Deploy Backend
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -58,23 +63,8 @@ jobs:
           exclude: |
             **/node_modules/**
             **/.env*
-            **/tmp/**
             **/.git*
             **/.cache/**
             **/*.db*
             **/*.log
 
-      # 5. Trigger Restart Node.js di cPanel (Phusion Passenger)
-      - name: Trigger Node.js App Restart
-        run: |
-          mkdir -p restart_trigger/tmp
-          touch restart_trigger/tmp/restart.txt
-
-      - name: Upload Restart Trigger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER || 'dharmabantenconsultant.com' }}
-          username: ${{ secrets.FTP_USERNAME || 'dharmaba1' }}
-          password: ${{ secrets.FTP_PASSWORD || 'Dharma26#' }}
-          local-dir: ./restart_trigger/
-          server-dir: ./backend/
