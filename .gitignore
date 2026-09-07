@@ -3,7 +3,7 @@ node_modules
 dist
 dist-ssr
 *.local
-.env
+.env*
 .DS_Store
 .journal/
 .vite/
@@ -13,7 +13,7 @@ frontend/node_modules
 frontend/dist
 frontend/dist-ssr
 frontend/*.local
-frontend/.env
+frontend/.env*
 
 # Backend (Strapi)
 backend/node_modules
@@ -22,7 +22,7 @@ backend/.tmp
 backend/.strapi
 backend/.cache
 backend/build
-backend/.env
+backend/.env*
 backend/*.db
 
 # Legacy folder

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { fetchArticlesFromStrapi } from '../services/strapi';
+import { fetchArticlesFromStrapi, getCachedArticles } from '../services/strapi';
+import { initialArticles } from '../data/articles';
 import { Article, ArticleCategory } from '../types';
 import { Arrow, DocumentIcon, ResetIcon, WhatsAppIcon } from './icons/Icons';
 import { Reveal } from './ui/Reveal';
@@ -10,24 +11,33 @@ export function ArticlesSection({
 }: {
   onSelectArticle?: (article: Article) => void;
 }) {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // Langsung tampilkan artikel dari cache lokal / data awal (0ms tanpa flicker)
+  const [articles, setArticles] = useState<Article[]>(() => {
+    const cached = getCachedArticles();
+    return cached.length > 0 ? cached : initialArticles;
+  });
+  // Loading skeleton hanya aktif jika benar-benar belum ada data sama sekali
+  const [loading, setLoading] = useState<boolean>(() => {
+    const cached = getCachedArticles();
+    return cached.length === 0 && initialArticles.length === 0;
+  });
   const [selectedCategory, setSelectedCategory] = useState<ArticleCategory>('All');
 
   useEffect(() => {
     let isMounted = true;
-    setLoading(true);
 
+    // Ambil versi terbaru secara background (Stale-While-Revalidate)
     fetchArticlesFromStrapi()
       .then((data) => {
         if (isMounted) {
-          setArticles(data || []);
+          if (data && data.length > 0) {
+            setArticles(data);
+          }
           setLoading(false);
         }
       })
       .catch(() => {
         if (isMounted) {
-          setArticles([]);
           setLoading(false);
         }
       });

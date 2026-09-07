@@ -1,6 +1,33 @@
 import { Article } from '../types';
+import { initialArticles } from '../data/articles';
 
 const STRAPI_URL = import.meta.env.VITE_STRAPI_URL || 'http://localhost:1337';
+const ARTICLES_CACHE_KEY = 'db_cached_articles_v2';
+
+export function getCachedArticles(): Article[] {
+  try {
+    const cached = localStorage.getItem(ARTICLES_CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
+  } catch {
+    // Abaikan error pada environment yang membatasi localStorage
+  }
+  return initialArticles;
+}
+
+export function saveCachedArticles(articles: Article[]): void {
+  try {
+    if (Array.isArray(articles) && articles.length > 0) {
+      localStorage.setItem(ARTICLES_CACHE_KEY, JSON.stringify(articles));
+    }
+  } catch {
+    // Abaikan jika kuota storage penuh
+  }
+}
 
 function extractMediaUrl(coverImageField: any): string | null {
   if (!coverImageField) return null;
@@ -69,10 +96,14 @@ export interface HeroData {
 export async function fetchHeroFromStrapi(): Promise<HeroData | null> {
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-    const response = await fetch(`${STRAPI_URL}/api/hero?populate=*`, {
+    const response = await fetch(`${STRAPI_URL}/api/hero?populate=*&_t=${Date.now()}`, {
       signal: controller.signal,
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        Pragma: 'no-cache',
+      },
     });
     clearTimeout(timeoutId);
 
@@ -115,64 +146,92 @@ export async function fetchHeroFromStrapi(): Promise<HeroData | null> {
 }
 
 export async function fetchArticlesFromStrapi(): Promise<Article[]> {
-  try {
+  const fetchAttempt = async (attempt: number): Promise<Article[]> => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    // Berikan batas waktu 12 detik agar cold-start server hosting cPanel tidak terpotong
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-    const response = await fetch(`${STRAPI_URL}/api/articles?populate=*`, {
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
-
-    if (!response.ok) throw new Error(`Strapi returned status ${response.status}`);
-    const json = await response.json();
-
-    if (!json.data || !Array.isArray(json.data) || json.data.length === 0) {
-      console.info('Strapi returned empty articles array.');
-      return [];
-    }
-
-    console.log('Fetched data from Strapi CMS:', json.data);
-
-    return json.data.map((item: any) => {
-      const attrs = item.attributes || item;
-      const extractedImage = extractMediaUrl(attrs.coverImage || item.coverImage);
-
-      return {
-        id: item.id,
-        slug: attrs.slug || `artikel-${item.id}`,
-        title: attrs.title || 'Judul Artikel',
-        excerpt: attrs.excerpt || '',
-        category: attrs.category || 'Legal',
-        publishedAt:
-          attrs.publishedAt || attrs.published_at || attrs.publishDate || attrs.createdAt
-            ? new Date(
-                attrs.publishedAt || attrs.published_at || attrs.publishDate || attrs.createdAt
-              )
-                .toISOString()
-                .split('T')[0]
-            : '2026-08-01',
-        readingTime: attrs.readingTime || '5 mnt baca',
-        coverImage:
-          extractedImage ||
-          'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80',
-        author: {
-          name: attrs.author?.name || attrs.authorName || 'Dharma Banten Editorial',
-          role: attrs.author?.role || attrs.authorRole || 'Konsultan Utama',
+    try {
+      // Query dengan pengurutan terbaru, batas 100 artikel, dan cache-busting timestamp _t
+      const url = `${STRAPI_URL}/api/articles?populate=*&sort[0]=createdAt:desc&pagination[pageSize]=100&_t=${Date.now()}`;
+      const response = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0',
         },
-        content: Array.isArray(attrs.content)
-          ? attrs.content
-          : typeof attrs.content === 'string'
-            ? attrs.content.split('\n\n')
-            : [attrs.excerpt || 'Artikel ini menyajikan perspektif mendalam bagi manajemen puncak.'],
-        keyTakeaways: Array.isArray(attrs.keyTakeaways)
-          ? attrs.keyTakeaways
-          : [attrs.excerpt || 'Perspektif strategis dari Dharma Banten.'],
-      };
-    });
+        cache: 'no-store',
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) throw new Error(`Strapi returned status ${response.status}`);
+      const json = await response.json();
+
+      if (!json.data || !Array.isArray(json.data) || json.data.length === 0) {
+        console.info('Strapi returned empty articles array.');
+        return [];
+      }
+
+      console.log(`Fetched ${json.data.length} article(s) from Strapi CMS:`, json.data);
+
+      const mappedArticles: Article[] = json.data.map((item: any) => {
+        const attrs = item.attributes || item;
+        const extractedImage = extractMediaUrl(attrs.coverImage || item.coverImage);
+
+        return {
+          id: item.id,
+          slug: attrs.slug || `artikel-${item.id}`,
+          title: attrs.title || 'Judul Artikel',
+          excerpt: attrs.excerpt || '',
+          category: attrs.category || 'Legal',
+          publishedAt:
+            attrs.publishedAt || attrs.published_at || attrs.publishDate || attrs.createdAt
+              ? new Date(
+                  attrs.publishedAt || attrs.published_at || attrs.publishDate || attrs.createdAt
+                )
+                  .toISOString()
+                  .split('T')[0]
+              : '2026-08-01',
+          readingTime: attrs.readingTime || '5 mnt baca',
+          coverImage:
+            extractedImage ||
+            'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80',
+          author: {
+            name: attrs.author?.name || attrs.authorName || 'Dharma Banten Editorial',
+            role: attrs.author?.role || attrs.authorRole || 'Konsultan Utama',
+          },
+          content: Array.isArray(attrs.content)
+            ? attrs.content
+            : typeof attrs.content === 'string'
+              ? attrs.content.split('\n\n')
+              : [attrs.excerpt || 'Artikel ini menyajikan perspektif mendalam bagi manajemen puncak.'],
+          keyTakeaways: Array.isArray(attrs.keyTakeaways)
+            ? attrs.keyTakeaways
+            : [attrs.excerpt || 'Perspektif strategis dari Dharma Banten.'],
+        };
+      });
+
+      // Simpan artikel segar ke local storage untuk render instan di kunjungan berikutnya
+      saveCachedArticles(mappedArticles);
+      return mappedArticles;
+    } catch (error: any) {
+      clearTimeout(timeoutId);
+      if (attempt < 2) {
+        console.warn(`Strapi fetch attempt ${attempt} failed (${error?.message || error}), retrying in 1s...`);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        return fetchAttempt(attempt + 1);
+      }
+      throw error;
+    }
+  };
+
+  try {
+    return await fetchAttempt(1);
   } catch (error) {
-    console.warn('Strapi backend offline/error:', error);
-    return [];
+    console.warn('Strapi backend offline/slow, fallback to cached articles:', error);
+    const cached = getCachedArticles();
+    return cached.length > 0 ? cached : initialArticles;
   }
 }
 

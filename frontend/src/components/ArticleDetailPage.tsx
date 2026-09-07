@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { fetchArticlesFromStrapi } from '../services/strapi';
+import { fetchArticlesFromStrapi, getCachedArticles } from '../services/strapi';
+import { initialArticles } from '../data/articles';
 import { Article, Service } from '../types';
 import { Arrow, BackArrow, WhatsAppIcon } from './icons/Icons';
 import { Brand } from './ui/Brand';
@@ -19,9 +20,21 @@ export function ArticleDetailPage({
   onBook,
   onSelectArticle,
 }: ArticleDetailPageProps) {
-  const [article, setArticle] = useState<Article | null>(null);
-  const [allArticles, setAllArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Inisialisasi instan dari cache lokal atau data awal
+  const [allArticles, setAllArticles] = useState<Article[]>(() => {
+    const cached = getCachedArticles();
+    return cached.length > 0 ? cached : initialArticles;
+  });
+  const [article, setArticle] = useState<Article | null>(() => {
+    const cached = getCachedArticles();
+    const pool = cached.length > 0 ? cached : initialArticles;
+    return pool.find((item) => item.slug === slug) || null;
+  });
+  const [loading, setLoading] = useState<boolean>(() => {
+    const cached = getCachedArticles();
+    const pool = cached.length > 0 ? cached : initialArticles;
+    return !pool.some((item) => item.slug === slug);
+  });
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -32,13 +45,20 @@ export function ArticleDetailPage({
   }, []);
 
   useEffect(() => {
-    setLoading(true);
-    fetchArticlesFromStrapi().then((data) => {
-      setAllArticles(data);
-      const found = data.find((item) => item.slug === slug);
-      setArticle(found || null);
-      setLoading(false);
-    });
+    fetchArticlesFromStrapi()
+      .then((data) => {
+        if (data && data.length > 0) {
+          setAllArticles(data);
+          const found = data.find((item) => item.slug === slug);
+          if (found) {
+            setArticle(found);
+          }
+        }
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   }, [slug]);
 
   const formatReadingTime = (timeStr?: string) => {
