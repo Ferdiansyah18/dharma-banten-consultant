@@ -1,0 +1,80 @@
+name: Deploy Fullstack (Node.js Backend & Frontend)
+
+on:
+  push:
+    branches:
+      - main # Trigger otomatis saat push ke branch main
+  workflow_dispatch: # Mengizinkan deploy manual melalui tombol "Run workflow" di GitHub Actions
+
+jobs:
+  deploy:
+    name: Build & Deploy to cPanel Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 1. Kompilasi Frontend
+      - name: Install & Build Frontend
+        run: |
+          cd frontend
+          npm ci
+          npm run build
+
+      # 2. Deploy Frontend ke public_html
+      - name: Deploy Frontend (public_html)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER || 'dharmabantenconsultant.com' }}
+          username: ${{ secrets.FTP_USERNAME || 'dharmaba1' }}
+          password: ${{ secrets.FTP_PASSWORD || 'Dharma26#' }}
+          local-dir: ./frontend/dist/
+          server-dir: ./public_html/
+
+      # 3. Kompilasi Backend (TypeScript Strapi)
+      - name: Install & Build Backend
+        run: |
+          cd backend
+          npm ci
+          npm run build
+
+      # 4. Deploy Backend
+      - name: Deploy Backend
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER || 'dharmabantenconsultant.com' }}
+          username: ${{ secrets.FTP_USERNAME || 'dharmaba1' }}
+          password: ${{ secrets.FTP_PASSWORD || 'Dharma26#' }}
+          local-dir: ./backend/
+          server-dir: ./backend/
+          exclude: |
+            **/node_modules/**
+            **/.env*
+            **/tmp/**
+            **/.git*
+            **/.cache/**
+            **/*.db*
+            **/*.log
+
+      # 5. Trigger Restart Node.js di cPanel (Phusion Passenger)
+      - name: Trigger Node.js App Restart
+        run: |
+          mkdir -p restart_trigger/tmp
+          touch restart_trigger/tmp/restart.txt
+
+      - name: Upload Restart Trigger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER || 'dharmabantenconsultant.com' }}
+          username: ${{ secrets.FTP_USERNAME || 'dharmaba1' }}
+          password: ${{ secrets.FTP_PASSWORD || 'Dharma26#' }}
+          local-dir: ./restart_trigger/
+          server-dir: ./backend/
