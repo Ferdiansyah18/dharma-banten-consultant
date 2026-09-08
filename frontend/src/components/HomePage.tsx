@@ -74,18 +74,21 @@ export function HomePage({
 
   useEffect(() => {
     let isMounted = true;
-    fetchHeroFromStrapi()
-      .then((heroData) => {
-        if (!isMounted || !heroData) return;
-        if (heroData.coverImages && heroData.coverImages.length > 0) {
-          const randomIndex = Math.floor(Math.random() * heroData.coverImages.length);
-          setCurrentHeroImage(heroData.coverImages[randomIndex]);
-        }
-      })
-      .catch(() => {});
+    const timer = setTimeout(() => {
+      fetchHeroFromStrapi()
+        .then((heroData) => {
+          if (!isMounted || !heroData) return;
+          if (heroData.coverImages && heroData.coverImages.length > 0) {
+            const randomIndex = Math.floor(Math.random() * heroData.coverImages.length);
+            setCurrentHeroImage(heroData.coverImages[randomIndex]);
+          }
+        })
+        .catch(() => {});
+    }, 1200);
 
     return () => {
       isMounted = false;
+      clearTimeout(timer);
     };
   }, []);
 
