@@ -98,12 +98,13 @@ export async function fetchHeroFromStrapi(): Promise<HeroData | null> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 8000);
 
-    const response = await fetch(`${STRAPI_URL}/api/hero?populate=*&_t=${Date.now()}`, {
+    const response = await fetch(`${STRAPI_URL}/api/hero?populate=*`, {
       signal: controller.signal,
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         Pragma: 'no-cache',
       },
+      cache: 'no-store',
     });
     clearTimeout(timeoutId);
 
@@ -152,8 +153,8 @@ export async function fetchArticlesFromStrapi(): Promise<Article[]> {
     const timeoutId = setTimeout(() => controller.abort(), 12000);
 
     try {
-      // Query dengan pengurutan terbaru, batas 100 artikel, dan cache-busting timestamp _t
-      const url = `${STRAPI_URL}/api/articles?populate=*&sort[0]=createdAt:desc&pagination[pageSize]=100&_t=${Date.now()}`;
+      // Query dengan pengurutan terbaru dan batas 100 artikel (tanpa parameter ilegal _t)
+      const url = `${STRAPI_URL}/api/articles?populate=*&sort[0]=createdAt:desc&pagination[pageSize]=100`;
       const response = await fetch(url, {
         signal: controller.signal,
         headers: {
