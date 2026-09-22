@@ -346,98 +346,93 @@ export function BookingPage({
                 <p className="booking-eyebrow">Langkah 02</p>
                 <h2>Tentukan tanggal dan waktu diskusi.</h2>
 
-                {service === 'UMKM' && (
-                  <div className="weekend-only-alert">
-                    <div className="alert-badge">Hanya Sabtu &amp; Minggu</div>
-                    <p>
-                      Sesi pro bono UMKM diadakan <strong>khusus di akhir pekan</strong>. Silakan pilih salah satu jadwal Sabtu atau Minggu terdekat:
-                    </p>
-                    <div className="weekend-chips-grid">
-                      {getUpcomingWeekends(6).map((item) => {
-                        const isCurrent = selectedDate === item.dateStr;
-                        return (
-                          <button
-                            key={item.dateStr}
-                            type="button"
-                            className={`weekend-chip ${isCurrent ? 'selected' : ''}`}
-                            onClick={() => {
-                              setSelectedDate(item.dateStr);
-                              setDateError('');
-                            }}
-                          >
-                            <span className="chip-day">{item.dayName}</span>
-                            <span className="chip-date">{item.dateNum} {item.monthName}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
                 <div className="scheduler">
                   {/* Bagian Pemilihan Tanggal */}
                   <div className="booking-section-block">
-                    <div className="section-title-wrap">
-                      <p className="field-label">Pilih Tanggal Konsultasi</p>
-                      <span className="field-sublabel">
-                        {service === 'UMKM'
-                          ? 'Pilih tanggal kalender (Wajib hari Sabtu atau Minggu)'
-                          : 'Pilih jadwal yang sesuai dengan agenda Anda melalui kalender'}
-                      </span>
-                    </div>
+                    {service === 'UMKM' ? (
+                      /* Khusus UMKM: Hanya Pilihan Hari Sabtu & Minggu Langsung Tanpa Input Kalender */
+                      <>
+                        <div className="section-title-wrap">
+                          <p className="field-label">Pilih Hari Konsultasi Akhir Pekan</p>
+                          <span className="field-sublabel">
+                            Sesi pro bono UMKM diselenggarakan <strong>khusus hari Sabtu &amp; Minggu</strong>. Silakan pilih jadwal yang tersedia:
+                          </span>
+                        </div>
+                        <div className="weekend-chips-grid">
+                          {getUpcomingWeekends(8).map((item) => {
+                            const isCurrent = selectedDate === item.dateStr;
+                            return (
+                              <button
+                                key={item.dateStr}
+                                type="button"
+                                className={`weekend-chip ${isCurrent ? 'selected' : ''}`}
+                                onClick={() => {
+                                  setSelectedDate(item.dateStr);
+                                  setDateError('');
+                                }}
+                              >
+                                <span className="chip-day">{item.dayName}</span>
+                                <span className="chip-date">
+                                  {item.dateNum} {item.monthName}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </>
+                    ) : (
+                      /* Layanan Reguler (Legal, HR, Talenta): Buka Kalender Interaktif */
+                      <>
+                        <div className="section-title-wrap">
+                          <p className="field-label">Pilih Tanggal Konsultasi</p>
+                          <span className="field-sublabel">
+                            Pilih jadwal yang sesuai dengan agenda Anda melalui kalender
+                          </span>
+                        </div>
 
-                    {/* Interactive Date Trigger Card */}
-                    <div
-                      className="custom-date-trigger-card is-custom-active"
-                      onClick={handleOpenDatePicker}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          handleOpenDatePicker();
-                        }
-                      }}
-                      aria-label="Pilih tanggal melalui kalender"
-                    >
-                      <div className="custom-date-icon-box">
-                        <CalendarIcon size={24} />
-                      </div>
-                      <div className="custom-date-text">
-                        <span className="custom-date-heading">Pilih Tanggal</span>
-                        <span className="custom-date-sub">
-                          {formattedDate
-                            ? `✓ Tanggal Terpilih: ${formattedDate}`
-                            : 'Klik di sini untuk membuka kalender dan memilih tanggal'}
-                        </span>
-                      </div>
-                      <span className="custom-date-btn-action">
-                        Buka Kalender <CalendarIcon size={15} />
-                      </span>
-                      <input
-                        ref={dateInputRef}
-                        id="booking-date"
-                        type="date"
-                        className="accessible-hidden-date-input"
-                        value={selectedDate}
-                        min={getTodayString()}
-                        onChange={(e) => {
-                          if (e.target.value) {
-                            if (service === 'UMKM' && !isWeekend(e.target.value)) {
-                              setDateError('Layanan gratis UMKM hanya tersedia pada hari Sabtu dan Minggu.');
-                              return;
+                        <div
+                          className="custom-date-trigger-card is-custom-active"
+                          onClick={handleOpenDatePicker}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              handleOpenDatePicker();
                             }
-                            setDateError('');
-                            setSelectedDate(e.target.value);
-                          }
-                        }}
-                        aria-label="Kalender pemilih tanggal konsultasi"
-                      />
-                    </div>
-                    {dateError && (
-                      <div className="booking-field-error">
-                        ⚠️ {dateError}
-                      </div>
+                          }}
+                          aria-label="Pilih tanggal melalui kalender"
+                        >
+                          <div className="custom-date-icon-box">
+                            <CalendarIcon size={24} />
+                          </div>
+                          <div className="custom-date-text">
+                            <span className="custom-date-heading">Pilih Tanggal</span>
+                            <span className="custom-date-sub">
+                              {formattedDate
+                                ? `✓ Tanggal Terpilih: ${formattedDate}`
+                                : 'Klik di sini untuk membuka kalender dan memilih tanggal'}
+                            </span>
+                          </div>
+                          <span className="custom-date-btn-action">
+                            Buka Kalender <CalendarIcon size={15} />
+                          </span>
+                          <input
+                            ref={dateInputRef}
+                            id="booking-date"
+                            type="date"
+                            className="accessible-hidden-date-input"
+                            value={selectedDate}
+                            min={getTodayString()}
+                            onChange={(e) => {
+                              if (e.target.value) {
+                                setSelectedDate(e.target.value);
+                              }
+                            }}
+                            aria-label="Kalender pemilih tanggal konsultasi"
+                          />
+                        </div>
+                      </>
                     )}
                   </div>
 
