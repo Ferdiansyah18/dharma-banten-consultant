@@ -118,12 +118,6 @@ export function BookingPage({
       url: 'https://dharmabantenconsultant.com',
     },
     serviceType: 'Konsultasi Profesional Hukum & HR',
-    offers: {
-      '@type': 'Offer',
-      price: currentPackage.price.replace(/[^0-9]/g, '') || '0',
-      priceCurrency: 'IDR',
-      availability: 'https://schema.org/InStock',
-    },
   };
 
   return (
@@ -135,7 +129,7 @@ export function BookingPage({
       transition={{ duration: 0.3 }}
     >
       <SEO
-        title="Jadwal & Biaya Konsultasi Privat"
+        title="Jadwal & Reservasi Konsultasi Privat"
         description="Atur jadwal dan format konsultasi hukum ketenagakerjaan, HR, dan manajemen talenta bersama konsultan Dharma Banten."
         canonical="/pricing-and-booking"
         structuredData={bookingStructuredData}

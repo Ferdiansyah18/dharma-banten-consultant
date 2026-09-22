@@ -144,7 +144,7 @@ export function HomePage({
             Kontak
           </button>
           <button className="header-cta" onClick={() => { setMenuOpen(false); onBook(); }}>
-            Jadwal &amp; Biaya <Arrow />
+            Jadwal Konsultasi <Arrow />
           </button>
         </nav>
         <button
@@ -223,7 +223,7 @@ export function HomePage({
               </p>
               <div className="hero-actions">
                 <button className="gold-button" onClick={() => onBook()}>
-                  Atur Jadwal &amp; Biaya <Arrow />
+                  Atur Jadwal Konsultasi <Arrow />
                 </button>
                 <button className="minimal-explore-btn" onClick={() => goTo('services')}>
                   <span>Eksplorasi Layanan</span>
@@ -433,7 +433,7 @@ export function HomePage({
                 </p>
                 <div className="final-cta-actions">
                   <button className="gold-button" onClick={() => onBook()}>
-                    Atur Jadwal &amp; Biaya <Arrow />
+                    Atur Jadwal Konsultasi <Arrow />
                   </button>
                   <a
                     href="mailto:info@dharmabantenconsultant.com"

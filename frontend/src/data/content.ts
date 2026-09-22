@@ -47,7 +47,7 @@ export const packages: Package[] = [
     service: 'Talenta',
     label: 'Konsultasi Sekali Sesi',
     title: 'Perspektif Kepemimpinan',
-    price: 'Mulai Rp 2.500.000',
+    price: 'Sesuai kesepakatan',
     description: 'Sesi fokus untuk membedah tantangan kepemimpinan atau kapabilitas manajerial mendesak.',
     included: ['Sesi konsultasi 90 menit', 'Review konteks & dinamika awal', 'Ringkasan rekomendasi tertulis'],
   },
@@ -56,7 +56,7 @@ export const packages: Package[] = [
     service: 'Talenta',
     label: 'Retainer Bulanan',
     title: 'Mitra Kapabilitas',
-    price: 'Sesuai lingkup bulanan',
+    price: 'Sesuai lingkup kerja',
     description: 'Pendampingan berkelanjutan bagi pengembangan kepemimpinan dan talenta organisasi yang sedang bertumbuh.',
     included: [
       'Akses prioritas penasihat',
@@ -82,7 +82,7 @@ export const packages: Package[] = [
     service: 'HR',
     label: 'Konsultasi Sekali Sesi',
     title: 'Perspektif Tenaga Kerja',
-    price: 'Mulai Rp 2.500.000',
+    price: 'Sesuai kesepakatan',
     description:
       'Saran praktis untuk mengatasi isu mendesak seputar HR, kebijakan, kontrak, atau relasi karyawan.',
     included: ['Sesi konsultasi 90 menit', 'Review dokumen & kontrak awal', 'Ringkasan langkah tindak lanjut tertulis'],
@@ -92,7 +92,7 @@ export const packages: Package[] = [
     service: 'HR',
     label: 'Retainer Bulanan',
     title: 'Penasihat Berkelanjutan',
-    price: 'Sesuai lingkup bulanan',
+    price: 'Sesuai lingkup kerja',
     description:
       'Kemitraan penasihat yang andal dan responsif bagi manajemen puncak dalam tata kelola SDM.',
     included: [
@@ -119,7 +119,7 @@ export const packages: Package[] = [
     service: 'Legal',
     label: 'Konsultasi Sekali Sesi',
     title: 'Konsultasi Terfokus',
-    price: 'Mulai Rp 2.500.000',
+    price: 'Sesuai kesepakatan',
     description: 'Sesi kerja terarah untuk membedah keputusan hukum atau ketenagakerjaan yang mendesak.',
     included: ['Sesi konsultasi 90 menit', 'Review dokumen legalitas awal', 'Ringkasan langkah tindak lanjut tertulis'],
   },
@@ -128,7 +128,7 @@ export const packages: Package[] = [
     service: 'Legal',
     label: 'Retainer Bulanan',
     title: 'Mitra Hukum Terpadu',
-    price: 'Sesuai lingkup bulanan',
+    price: 'Sesuai lingkup kerja',
     description: 'Penasihat hukum ketenagakerjaan dan korporasi yang responsif untuk mendukung keputusan jajaran direksi.',
     included: ['Akses konsultasi prioritas', 'Tinjauan hukum berkala', 'Dukungan pembaruan regulasi'],
   },

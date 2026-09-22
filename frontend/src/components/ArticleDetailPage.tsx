@@ -76,7 +76,7 @@ export function ArticleDetailPage({
         <header role="banner" className={`landing-header ${scrolled ? 'is-scrolled' : ''}`}>
           <Brand onClick={onBack} />
           <button className="header-cta" onClick={() => onBook()}>
-            Jadwal &amp; Biaya <Arrow />
+            Jadwal Konsultasi <Arrow />
           </button>
         </header>
         <main
@@ -135,7 +135,7 @@ export function ArticleDetailPage({
         <header role="banner" className={`landing-header ${scrolled ? 'is-scrolled' : ''}`}>
           <Brand onClick={onBack} />
           <button className="header-cta" onClick={() => onBook()}>
-            Jadwal &amp; Biaya <Arrow />
+            Jadwal Konsultasi <Arrow />
           </button>
         </header>
         <main className="layout-wide section-pad text-center">
@@ -252,7 +252,7 @@ export function ArticleDetailPage({
         <Brand onClick={onBack} />
         <nav className="landing-nav article-header-nav" aria-label="Navigasi Artikel">
           <button className="header-cta" onClick={() => onBook(article.category)}>
-            Jadwal &amp; Biaya <Arrow />
+            Jadwal Konsultasi <Arrow />
           </button>
         </nav>
       </header>
