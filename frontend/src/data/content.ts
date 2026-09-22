@@ -145,6 +145,34 @@ export const packages: Package[] = [
       'Laporan progres eksekutif',
     ],
   },
+  {
+    id: 'umkm-legal-gratis',
+    service: 'UMKM',
+    label: 'Khusus UMKM • Bebas Biaya',
+    title: 'Klinik Legalitas & Perizinan UMKM',
+    price: 'Gratis (Sabtu & Minggu)',
+    description: 'Sesi konsultasi cuma-cuma seputar legalitas entitas, izin edar/operasional, serta pembuatan & validasi NIB khusus pelaku UMKM.',
+    included: [
+      'Sesi konsultasi 45 menit (Online)',
+      'Hanya tersedia hari Sabtu & Minggu',
+      'Panduan legalitas & NIB praktis',
+      '100% Bebas Biaya (Pro Bono)',
+    ],
+  },
+  {
+    id: 'umkm-hr-gratis',
+    service: 'UMKM',
+    label: 'Khusus UMKM • Bebas Biaya',
+    title: 'Klinik SDM & Ketenagakerjaan UMKM',
+    price: 'Gratis (Sabtu & Minggu)',
+    description: 'Bimbingan cuma-cuma penyusunan kesepakatan kerja, tata upah usaha mikro/kecil, dan pengelolaan tim untuk usaha rintisan.',
+    included: [
+      'Sesi konsultasi 45 menit (Online)',
+      'Hanya tersedia hari Sabtu & Minggu',
+      'Draf kesepakatan kerja sederhana',
+      '100% Bebas Biaya (Pro Bono)',
+    ],
+  },
 ];
 
 export const calendarDays: CalendarDay[] = [

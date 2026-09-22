@@ -1,5 +1,5 @@
 export type Page = 'home' | 'booking' | 'article';
-export type Service = 'Talenta' | 'HR' | 'Legal';
+export type Service = 'Talenta' | 'HR' | 'Legal' | 'UMKM';
 export type PackageId = string;
 
 export type ServicePillar = {

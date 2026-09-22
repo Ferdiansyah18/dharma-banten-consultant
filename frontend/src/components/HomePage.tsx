@@ -358,6 +358,31 @@ export function HomePage({
                 </motion.article>
               ))}
             </div>
+
+            {/* Inisiatif Pro Bono UMKM Akhir Pekan */}
+            <motion.div
+              className="umkm-banner-card"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+            >
+              <div className="umkm-banner-content">
+                <div className="umkm-badge-wrap">
+                  <span className="umkm-tag-badge">Layanan Pro Bono</span>
+                  <span className="umkm-weekend-badge">Khusus Sabtu &amp; Minggu</span>
+                </div>
+                <h3>Klinik Konsultasi Gratis untuk Pelaku UMKM</h3>
+                <p>
+                  Komitmen sosial Dharma Banten dalam memberdayakan usaha lokal: sesi privat cuma-cuma seputar legalitas bisnis, izin edar/operasional, NIB, dan tata kelola tenaga kerja rintisan. Tersedia khusus setiap akhir pekan tanpa dipungut biaya.
+                </p>
+              </div>
+              <div className="umkm-banner-cta">
+                <button className="gold-button" onClick={() => onBook('UMKM')}>
+                  Daftar Sesi UMKM Gratis <Arrow />
+                </button>
+              </div>
+            </motion.div>
           </div>
         </section>
 

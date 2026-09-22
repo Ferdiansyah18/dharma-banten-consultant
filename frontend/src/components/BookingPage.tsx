@@ -15,6 +15,48 @@ const getTodayString = () => {
   return `${year}-${month}-${day}`;
 };
 
+const isWeekend = (dateString: string) => {
+  if (!dateString) return false;
+  try {
+    const d = new Date(dateString + 'T00:00:00');
+    const day = d.getDay();
+    return day === 0 || day === 6; // 0 = Minggu, 6 = Sabtu
+  } catch {
+    return false;
+  }
+};
+
+const getNextWeekendString = () => {
+  const d = new Date();
+  while (d.getDay() !== 6 && d.getDay() !== 0) {
+    d.setDate(d.getDate() + 1);
+  }
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const getUpcomingWeekends = (count = 6) => {
+  const dates: { dateStr: string; label: string; dayName: string; dateNum: string; monthName: string }[] = [];
+  const d = new Date();
+  while (dates.length < count) {
+    if (d.getDay() === 6 || d.getDay() === 0) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
+      const dayName = d.getDay() === 6 ? 'Sabtu' : 'Minggu';
+      const dateNum = String(d.getDate());
+      const monthName = new Intl.DateTimeFormat('id-ID', { month: 'short' }).format(d);
+      const label = `${dayName}, ${dateNum} ${monthName}`;
+      dates.push({ dateStr, label, dayName, dateNum, monthName });
+    }
+    d.setDate(d.getDate() + 1);
+  }
+  return dates;
+};
+
 const formatDateDisplay = (dateString: string) => {
   if (!dateString) return '';
   try {
@@ -40,8 +82,14 @@ export function BookingPage({
   const [step, setStep] = useState(1);
   const [service, setService] = useState<Service>(defaultService);
   const [selectedPackage, setSelectedPackage] = useState<PackageId>('legal-consultation');
-  const [selectedDate, setSelectedDate] = useState<string>(getTodayString);
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+    if (defaultService === 'UMKM') {
+      return getNextWeekendString();
+    }
+    return getTodayString();
+  });
   const [selectedTime, setSelectedTime] = useState('10:30');
+  const [dateError, setDateError] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -59,6 +107,9 @@ export function BookingPage({
 
   useEffect(() => {
     setService(defaultService);
+    if (defaultService === 'UMKM' && !isWeekend(selectedDate)) {
+      setSelectedDate(getNextWeekendString());
+    }
   }, [defaultService]);
 
   const currentPackage = packages.find((pkg) => pkg.id === selectedPackage) || packages[0];
@@ -67,12 +118,25 @@ export function BookingPage({
   useEffect(() => {
     const first = packages.find((item) => item.service === service);
     if (first) setSelectedPackage(first.id);
+
+    if (service === 'UMKM') {
+      if (!isWeekend(selectedDate)) {
+        setSelectedDate(getNextWeekendString());
+      }
+    } else {
+      setDateError('');
+    }
   }, [service]);
 
   const formattedDate = formatDateDisplay(selectedDate);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (service === 'UMKM' && !isWeekend(selectedDate)) {
+      setDateError('Layanan gratis UMKM hanya tersedia pada hari Sabtu dan Minggu.');
+      setStep(2);
+      return;
+    }
     setIsSubmitting(true);
 
     const formData = new FormData(event.currentTarget);
@@ -82,8 +146,8 @@ export function BookingPage({
       email: (formData.get('email') as string) || '',
       phone: (formData.get('phone') as string) || '',
       description: (formData.get('description') as string) || '',
-      service: service,
-      packageName: currentPackage.label,
+      service: service === 'UMKM' ? 'Klinik UMKM (Gratis)' : service,
+      packageName: currentPackage.title || currentPackage.label,
       packagePrice: currentPackage.price,
       bookingDate: formattedDate,
       bookingTime: `${selectedTime} WIB`,
@@ -100,18 +164,22 @@ export function BookingPage({
   };
 
   const whatsappMessage = encodeURIComponent(
-    `Halo Dharma Banten, saya ingin memesan jadwal konsultasi:\n\nLayanan: ${service}\nPaket: ${currentPackage.label} (${currentPackage.price})\nJadwal: ${formattedDate} pukul ${selectedTime} WIB\n\nMohon konfirmasi ketersediaan jadwal tersebut. Terima kasih.`
+    service === 'UMKM'
+      ? `Halo Dharma Banten, saya pelaku UMKM ingin mendaftar sesi konsultasi gratis akhir pekan:\n\nLayanan: Klinik UMKM Gratis (Sabtu & Minggu)\nPaket: ${currentPackage.title} (${currentPackage.price})\nJadwal: ${formattedDate} pukul ${selectedTime} WIB\n\nMohon konfirmasi ketersediaan jadwal pro bono tersebut. Terima kasih.`
+      : `Halo Dharma Banten, saya ingin memesan jadwal konsultasi:\n\nLayanan: ${service}\nPaket: ${currentPackage.label} (${currentPackage.price})\nJadwal: ${formattedDate} pukul ${selectedTime} WIB\n\nMohon konfirmasi ketersediaan jadwal tersebut. Terima kasih.`
   );
   const whatsappUrl = `https://wa.me/6281916243614?text=${whatsappMessage}`;
 
   const emailMessage = encodeURIComponent(
-    `Halo Dharma Banten,\n\nSaya ingin mengonfirmasi sesi ${currentPackage.label} untuk layanan ${service} pada hari ${formattedDate} pukul ${selectedTime} WIB.\n\nTerima kasih.`
+    service === 'UMKM'
+      ? `Halo Dharma Banten,\n\nSaya ingin mengonfirmasi sesi ${currentPackage.title} (Layanan Gratis UMKM Akhir Pekan) pada hari ${formattedDate} pukul ${selectedTime} WIB.\n\nTerima kasih.`
+      : `Halo Dharma Banten,\n\nSaya ingin mengonfirmasi sesi ${currentPackage.label} untuk layanan ${service} pada hari ${formattedDate} pukul ${selectedTime} WIB.\n\nTerima kasih.`
   );
 
   const bookingStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: `Konsultasi ${service} - Dharma Banten`,
+    name: service === 'UMKM' ? 'Klinik UMKM Gratis - Dharma Banten' : `Konsultasi ${service} - Dharma Banten`,
     provider: {
       '@type': 'LegalService',
       name: 'Dharma Banten Konsultan',
@@ -219,18 +287,26 @@ export function BookingPage({
                 <p className="booking-eyebrow">Langkah 01</p>
                 <h2>Pilih bidang keahlian dan format konsultasi.</h2>
                 <div className="service-tabs" role="tablist" aria-label="Pilihan Bidang Layanan">
-                  {(['Legal', 'HR', 'Talenta'] as Service[]).map((tab) => (
+                  {(['Legal', 'HR', 'Talenta', 'UMKM'] as Service[]).map((tab) => (
                     <button
                       key={tab}
                       role="tab"
                       aria-selected={service === tab}
-                      className={service === tab ? 'active' : ''}
+                      className={`${service === tab ? 'active' : ''} ${tab === 'UMKM' ? 'tab-umkm' : ''}`}
                       onClick={() => setService(tab)}
                     >
-                      {tab}
+                      {tab === 'UMKM' ? 'Klinik UMKM (Gratis)' : tab}
                     </button>
                   ))}
                 </div>
+                {service === 'UMKM' && (
+                  <div className="umkm-service-notice">
+                    <span className="umkm-pill">Khusus Pelaku UMKM</span>
+                    <p>
+                      <strong>Layanan Pro Bono 100% Bebas Biaya:</strong> Didedikasikan untuk mendukung pengusaha mikro, kecil, dan menengah. Sesi konsultasi dilaksanakan <strong>eksklusif pada hari Sabtu &amp; Minggu</strong> secara daring/privat.
+                    </p>
+                  </div>
+                )}
                 <div className="package-options">
                   {shownPackages.map((item) => (
                     <button
@@ -252,7 +328,7 @@ export function BookingPage({
                 </div>
                 <div className="step-actions">
                   <span>
-                    Layanan terpilih: <b>{service}</b>
+                    Layanan terpilih: <b>{service === 'UMKM' ? 'Klinik UMKM (Gratis Akhir Pekan)' : service}</b>
                   </span>
                   <button type="button" className="navy-button" onClick={() => setStep(2)}>
                     Lanjutkan ke Jadwal <Arrow />
@@ -270,13 +346,43 @@ export function BookingPage({
                 <p className="booking-eyebrow">Langkah 02</p>
                 <h2>Tentukan tanggal dan waktu diskusi.</h2>
 
+                {service === 'UMKM' && (
+                  <div className="weekend-only-alert">
+                    <div className="alert-badge">Hanya Sabtu &amp; Minggu</div>
+                    <p>
+                      Sesi pro bono UMKM diadakan <strong>khusus di akhir pekan</strong>. Silakan pilih salah satu jadwal Sabtu atau Minggu terdekat:
+                    </p>
+                    <div className="weekend-chips-grid">
+                      {getUpcomingWeekends(6).map((item) => {
+                        const isCurrent = selectedDate === item.dateStr;
+                        return (
+                          <button
+                            key={item.dateStr}
+                            type="button"
+                            className={`weekend-chip ${isCurrent ? 'selected' : ''}`}
+                            onClick={() => {
+                              setSelectedDate(item.dateStr);
+                              setDateError('');
+                            }}
+                          >
+                            <span className="chip-day">{item.dayName}</span>
+                            <span className="chip-date">{item.dateNum} {item.monthName}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 <div className="scheduler">
                   {/* Bagian Pemilihan Tanggal */}
                   <div className="booking-section-block">
                     <div className="section-title-wrap">
                       <p className="field-label">Pilih Tanggal Konsultasi</p>
                       <span className="field-sublabel">
-                        Pilih jadwal yang sesuai dengan agenda Anda melalui kalender
+                        {service === 'UMKM'
+                          ? 'Pilih tanggal kalender (Wajib hari Sabtu atau Minggu)'
+                          : 'Pilih jadwal yang sesuai dengan agenda Anda melalui kalender'}
                       </span>
                     </div>
 
@@ -317,12 +423,22 @@ export function BookingPage({
                         min={getTodayString()}
                         onChange={(e) => {
                           if (e.target.value) {
+                            if (service === 'UMKM' && !isWeekend(e.target.value)) {
+                              setDateError('Layanan gratis UMKM hanya tersedia pada hari Sabtu dan Minggu.');
+                              return;
+                            }
+                            setDateError('');
                             setSelectedDate(e.target.value);
                           }
                         }}
                         aria-label="Kalender pemilih tanggal konsultasi"
                       />
                     </div>
+                    {dateError && (
+                      <div className="booking-field-error">
+                        ⚠️ {dateError}
+                      </div>
+                    )}
                   </div>
 
                   {/* Bagian Pilihan Waktu */}
@@ -380,7 +496,18 @@ export function BookingPage({
                   <button type="button" className="underlined-action" onClick={() => setStep(1)}>
                     ← Kembali ke Pilihan Layanan
                   </button>
-                  <button type="button" className="navy-button" onClick={() => setStep(3)}>
+                  <button
+                    type="button"
+                    className="navy-button"
+                    onClick={() => {
+                      if (service === 'UMKM' && !isWeekend(selectedDate)) {
+                        setDateError('Layanan gratis UMKM hanya tersedia pada hari Sabtu dan Minggu. Silakan pilih hari Sabtu atau Minggu.');
+                        return;
+                      }
+                      setDateError('');
+                      setStep(3);
+                    }}
+                  >
                     Lanjutkan ke Data Diri <Arrow />
                   </button>
                 </div>
@@ -410,13 +537,13 @@ export function BookingPage({
                     />
                   </label>
                   <label htmlFor="booking-company-name">
-                    Perusahaan / Organisasi
+                    {service === 'UMKM' ? 'Nama Usaha / Brand UMKM' : 'Perusahaan / Organisasi'}
                     <input
                       id="booking-company-name"
                       required
                       name="company"
                       autoComplete="organization"
-                      placeholder="Nama perusahaan / organisasi"
+                      placeholder={service === 'UMKM' ? 'cth: Kopi Nusantara / Toko Berkah Mandiri' : 'Nama perusahaan / organisasi'}
                       aria-required="true"
                     />
                   </label>
@@ -451,14 +578,24 @@ export function BookingPage({
                       required
                       name="description"
                       rows={4}
-                      placeholder="Mohon jelaskan secara ringkas pokok persoalan, latar belakang, atau topik yang ingin dikonsultasikan."
+                      placeholder={
+                        service === 'UMKM'
+                          ? 'Mohon jelaskan secara ringkas bidang usaha UMKM Anda serta persoalan hukum, perizinan (NIB), atau ketenagakerjaan yang ingin dikonsultasikan.'
+                          : 'Mohon jelaskan secara ringkas pokok persoalan, latar belakang, atau topik yang ingin dikonsultasikan.'
+                      }
                       aria-required="true"
                     />
                   </label>
                 </div>
+                {service === 'UMKM' && (
+                  <div className="umkm-free-badge-note">
+                    <span>✓ Layanan Bebas Biaya (100% Pro Bono)</span>
+                    <small>Sesi ini dialokasikan khusus untuk pemberdayaan pelaku UMKM pada hari Sabtu &amp; Minggu.</small>
+                  </div>
+                )}
                 <div className="booking-review">
                   <span>{currentPackage.label}</span>
-                  <span>{service}</span>
+                  <span>{service === 'UMKM' ? 'Klinik UMKM (Gratis)' : service}</span>
                   <span>
                     {formattedDate}, {selectedTime} WIB
                   </span>
@@ -473,7 +610,11 @@ export function BookingPage({
                     Kembali ke Jadwal
                   </button>
                   <button type="submit" className="navy-button" disabled={isSubmitting}>
-                    {isSubmitting ? 'Menyimpan ke Strapi...' : 'Kirim Permintaan Konsultasi'}{' '}
+                    {isSubmitting
+                      ? 'Menyimpan ke Strapi...'
+                      : service === 'UMKM'
+                        ? 'Kirim Permintaan UMKM Gratis'
+                        : 'Kirim Permintaan Konsultasi'}{' '}
                     {!isSubmitting && <Arrow />}
                   </button>
                 </div>

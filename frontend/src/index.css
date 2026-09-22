@@ -987,14 +987,17 @@ a:hover .back-arrow-icon {
   margin: 1.25rem 0 2.5rem;
   max-width: 22ch;
 }
-.service-filter {
+.service-filter,
+.service-tabs {
   border-bottom: 1px solid #cbd5e1;
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   margin-top: 2.5rem;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
-.service-filter button {
+.service-filter button,
+.service-tabs button {
   background: none;
   border: 0;
   border-bottom: 2px solid transparent;
@@ -1008,13 +1011,255 @@ a:hover .back-arrow-icon {
   transition: all 0.2s ease;
   cursor: pointer;
 }
-.service-filter button:hover {
+.service-filter button:hover,
+.service-tabs button:hover {
   color: #0f172a;
 }
-.service-filter button.active {
+.service-filter button.active,
+.service-tabs button.active {
   border-color: #c59b27;
   color: #0f172a;
 }
+.service-tabs button.tab-umkm {
+  color: #b45309;
+}
+.service-tabs button.tab-umkm.active {
+  border-color: #d97706;
+  color: #92400e;
+}
+
+/* UMKM Service Notice on Step 1 */
+.umkm-service-notice {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #fde68a;
+  border-radius: 0.65rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.umkm-service-notice .umkm-pill {
+  align-self: flex-start;
+  background: #d97706;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+}
+.umkm-service-notice p {
+  color: #78350f;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.umkm-service-notice strong {
+  color: #451a03;
+}
+
+/* Weekend Only Alert on Step 2 */
+.weekend-only-alert {
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.4rem;
+  margin-bottom: 2rem;
+}
+.weekend-only-alert .alert-badge {
+  display: inline-block;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 0.65rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.35rem;
+  margin-bottom: 0.65rem;
+}
+.weekend-only-alert p {
+  color: #334155;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+.weekend-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+.weekend-chip {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.55rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+}
+.weekend-chip:hover {
+  border-color: #c59b27;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+}
+.weekend-chip.selected {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18), 0 0 0 2px #c59b27;
+}
+.weekend-chip .chip-day {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+.weekend-chip.selected .chip-day {
+  color: #cbd5e1;
+}
+.weekend-chip .chip-date {
+  font-size: 0.82rem;
+  font-weight: 750;
+  color: #0f172a;
+}
+.weekend-chip.selected .chip-date {
+  color: #ffffff;
+}
+
+/* Date validation error */
+.booking-field-error {
+  margin-top: 0.65rem;
+  padding: 0.6rem 0.9rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.45rem;
+  color: #b91c1c;
+  font-size: 0.82rem;
+  font-weight: 550;
+  line-height: 1.45;
+}
+
+/* UMKM Free Badge Note on Step 3 */
+.umkm-free-badge-note {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding: 0.9rem 1.2rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.umkm-free-badge-note span {
+  color: #047857;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.umkm-free-badge-note small {
+  color: #065f46;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+/* UMKM Banner Card on HomePage */
+.umkm-banner-card {
+  margin-top: 3.5rem;
+  background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  border-radius: 1rem;
+  padding: 2.25rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+.umkm-banner-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(197, 155, 39, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.umkm-banner-content {
+  max-width: 44rem;
+}
+.umkm-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+.umkm-tag-badge {
+  background: #c59b27;
+  color: #0f172a;
+  font-size: 0.65rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+}
+.umkm-weekend-badge {
+  background: rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+}
+.umkm-banner-content h3 {
+  color: #ffffff;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.6rem;
+  line-height: 1.3;
+}
+.umkm-banner-content p {
+  color: #cbd5e1;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0;
+}
+.umkm-banner-cta {
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .umkm-banner-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.75rem 1.5rem;
+    gap: 1.5rem;
+  }
+  .umkm-banner-cta {
+    width: 100%;
+  }
+  .umkm-banner-cta .gold-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .package-options {
   display: grid;
   gap: 1.25rem;
